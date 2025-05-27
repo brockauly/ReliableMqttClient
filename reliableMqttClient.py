@@ -15,6 +15,10 @@ class ReliableMqttClient:
 		- What happens if a new message gets the same <mid> as one in the persistent storage (because script restarted) ?
 			-> Old message is removed from storage and re-published (gets new <mid>), then rewritten in storage if not delivered.
 			-> Known issue : if crash or reboot at that moment (unlikely), those messages are lost.
+	
+	:author: Nicolas Brusselmans <nicolas.brusselmans@uclouvain.be>
+	:license: MPL-2.0
+	:version: 1.0
 	'''
 	def __init__(self, username, password, serverip, port=1883, clientid=socket.gethostname(), keepalive=20, qos=1,
 		logger=False, printer=True, logprefix="", loglevel='info', persistentBufferFilename=None, maxThreadNumber=1000):
