@@ -3,12 +3,12 @@
 from reliableMqttClient import ReliableMqttClient
 import socket
 import threading
-from time import sleep
+import time
 
 def main():
-	USERNAME 	= "user"
-	PASSWORD 	= "1234"
-	SERVERIP 	= "127.0.0.1"
+	USERNAME    = "user"
+	PASSWORD    = "1234"
+	SERVERIP    = "localhost"
 	PORT 		= 1883
 	CLIENTID	= socket.gethostname()
 	KEEPALIVE 	= 20
@@ -16,24 +16,25 @@ def main():
 	LOGGER 		= False
 	PRINTER 	= True
 	LOGPREFIX 	= "*** Simple example - "
+	LOGLEVEL	= "debug"
 	BUFNAME		= "persistentbuffer.db"
 
 	mqttClient = ReliableMqttClient(USERNAME, PASSWORD, SERVERIP, clientid=CLIENTID, qos=QOS,
-		keepalive=KEEPALIVE, logger=LOGGER, printer=PRINTER, logprefix=LOGPREFIX, persistentBufferFilename=BUFNAME)
+		keepalive=KEEPALIVE, logger=LOGGER, printer=PRINTER, logprefix=LOGPREFIX, loglevel=LOGLEVEL, persistentBufferFilename=BUFNAME)
 
 	def call_stats():
 		while True:
-			sleep(10)
+			time.sleep(10)
 			mqttClient.message_stats(log=True, reset=False)
 	threading.Thread(target=call_stats).start()
 
 	i = 1
 	while True:
-		sleep(3)
-		topic = 'test'
-		payload = f'example {i}'
-		print(f'Publishing {topic} {payload}')
-		mqttClient.publish(topic, payload)
+		time.sleep(1)
+		msg = f'test field={i} {int(time.time()*1e9)}'
+		topic = 'topic'
+		print(f'Publishing {topic} - {msg}')
+		mqttClient.publish(topic, msg)
 		i += 1
 
 if __name__ == '__main__':
